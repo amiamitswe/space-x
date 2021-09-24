@@ -1,9 +1,12 @@
-import React from 'react';
+import BodyContainer from '../Components/BodyContainer/BodyContainer';
+import NavBar from '../Components/NavBar/NavBar';
+
 
 const Home = () => {
    return (
-      <div className='container'>
-         spaceX
+      <div >
+         <NavBar />
+         <BodyContainer />
       </div>
    );
 };
