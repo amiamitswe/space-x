@@ -8,3 +8,6 @@ body {
 .cursor-pointer:hover {
   cursor: pointer;
 }
+.backdrop {
+  background-color: #92858526;
+}
