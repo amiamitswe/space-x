@@ -7,7 +7,7 @@ export const listSpace = createAsyncThunk(
       const { limit } = payload;
 
       const response = await SpaceX_API.spaceList({ limit });
-      console.log(await response);
-      return await response.data;
+
+      return await response;
    }
 );

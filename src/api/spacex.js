@@ -7,9 +7,7 @@ class SpaceX_API {
          mode: 'cors'
       }).then(data => data.json());
 
-      console.log(await response);
-
-      return await response.data;
+      return await response;
    }
 }
 

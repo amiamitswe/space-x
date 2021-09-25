@@ -3,11 +3,11 @@ import React from 'react';
 const Modal = (props) => {
    const { closeModal } = props;
    return (
-      <div className="modal fade d-block opacity-100" >
+      <div className="modal fade d-block opacity-100 backdrop" >
          <div className="modal-dialog modal-dialog-centered">
             <div className="modal-content">
                <div className="modal-header">
-                  <h5 className="modal-title" >Modal title</h5>
+                  <h5 className="modal-title">Modal title</h5>
                   <button onClick={closeModal} type="button" className="btn-close"></button>
                </div>
                <div className="modal-body">
