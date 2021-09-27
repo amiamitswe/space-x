@@ -11,3 +11,14 @@ body {
 .backdrop {
   background-color: #92858526;
 }
+
+.customModalWidth {
+  max-width: auto;
+  margin-top: 60px;
+}
+
+@media (min-width: 576px) {
+  .customModalWidth {
+    max-width: 80%;
+  }
+}
