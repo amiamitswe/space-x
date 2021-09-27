@@ -23,32 +23,32 @@ const BodyContainer = () => {
    const spaceListData = useSelector(selectSpaceList);
    const spaceListLoading = useSelector(selectSpaceListLoading);
 
+   const [error, setError] = useState(null);
    const [showModal, setShowModal] = useState(false);
    const [spaceList, setSpaceList] = useState(spaceListData);
-   const [error, setError] = useState(null);
+   const [selectedSpaceData, setSelectedSpaceData] = useState(null);
 
-   // modal open and close handler
-   const showModalHandler = () => {
+   const showModalHandler = (flight_number) => {
+      const spaceData = [...spaceListData];
+      const findIndexOfRocket = spaceListData.findIndex(item => item.flight_number === flight_number);
+      const selectedItemData = spaceData[findIndexOfRocket];
+      setSelectedSpaceData(selectedItemData);
       setShowModal(true);
    };
 
    const closeModalHandler = () => {
+      setSelectedSpaceData(null);
       setShowModal(false);
    };
 
-   // dispatch action
    useEffect(() => {
       dispatch(listSpace({ limit: 200 }));
    }, [dispatch]);
 
-
-   // set initial value
    useEffect(() => {
       setSpaceList(spaceListData);
    }, [spaceListData]);
 
-
-   // search Handler with rocket name
    const searchHandler = (event) => {
       if (event.keyCode === 13) {
          const searchValue = event?.target.value.trim();
@@ -71,14 +71,12 @@ const BodyContainer = () => {
       }
    };
 
-   // filter list by success status "success or failed"
    const filterByStatusHandler = (event) => {
       const selectedStatus = (event.target.value);
 
       const searchItem = [];
       if (selectedStatus === 'success') {
          spaceListData.forEach(item => {
-            // check mission success
             if (item?.launch_success === true) {
                searchItem.push(item);
                setError(null);
@@ -91,7 +89,6 @@ const BodyContainer = () => {
 
       if (selectedStatus === 'failed') {
          spaceListData.forEach(item => {
-            // check mission failed
             if (item?.launch_success === false) {
                searchItem.push(item);
                setError(null);
@@ -102,7 +99,6 @@ const BodyContainer = () => {
          return;
       }
 
-      // clear all filter about status
       if (selectedStatus === 'clear') {
          setSpaceList(spaceListData);
          return;
@@ -115,7 +111,6 @@ const BodyContainer = () => {
       const searchItem = [];
       if (selectedItem === 'completed') {
          spaceListData.forEach(item => {
-            // check upcoming true
             if (item?.upcoming === false) {
                searchItem.push(item);
                setError(null);
@@ -127,7 +122,6 @@ const BodyContainer = () => {
       }
       if (selectedItem === 'upcoming') {
          spaceListData.forEach(item => {
-            // check upcoming true
             if (item?.upcoming === true) {
                searchItem.push(item);
                setError(null);
@@ -138,7 +132,6 @@ const BodyContainer = () => {
          return;
       }
 
-      // clear all filter about status
       if (selectedItem === 'clear') {
          setSpaceList(spaceListData);
          return;
@@ -152,7 +145,6 @@ const BodyContainer = () => {
       const searchItem = [];
       if (selectedTime === 'year') {
          spaceListData.forEach(item => {
-            // check last Year
             if (getYearData(item?.launch_date_utc) === getYearData(new Date()) - 1) {
                searchItem.push(item);
                setError(null);
@@ -200,23 +192,35 @@ const BodyContainer = () => {
          {spaceListLoading && <Spinner />}
 
          <div className='mb-2 row'>
-            <div className='col-4'>
+            <div className='col-12 col-lg-5'>
                <FormInput
+                  label='Please type rocket name and press enter'
                   placeholder='Rocket Name ...'
                   onKeyDown={searchHandler}
                />
             </div>
-            <div className="col-2"></div>
-            <div className='col-6'>
+            <div className='col-lg-1'></div>
+            <div className='col-12 col-lg-6'>
                <div className="row">
-                  <div className="col-4">
-                     <Select options={sortByStatus} onChange={filterByStatusHandler} />
+                  <div className="col-12 col-lg-4">
+                     <Select
+                        label='Lunch Status'
+                        options={sortByStatus}
+                        onChange={filterByStatusHandler}
+                     />
                   </div>
-                  <div className="col-4">
-                     <Select options={shortByUpComing} onChange={filterByUpcomingHandler} />
+                  <div className="col-12 col-lg-4">
+                     <Select
+                        label='Upcoming'
+                        options={shortByUpComing}
+                        onChange={filterByUpcomingHandler} />
                   </div>
-                  <div className="col-4">
-                     <Select options={shortByTime} onChange={filterByTime} />
+                  <div className="col-12 col-lg-4">
+                     <Select
+                        label='Filter by Time'
+                        options={shortByTime}
+                        onChange={filterByTime}
+                     />
                   </div>
                </div>
             </div>
@@ -231,15 +235,15 @@ const BodyContainer = () => {
                      onClick={showModalHandler}
                   />
                ))}
-
-
             </div>
             :
             <>{error ? <h1 className='text-center text-info mt-5'>
                No Rocket data found with
                <span className='text-danger mx-2'>"{error}"</span></h1> : null}</>
          }
-         {showModal && <Modal closeModal={closeModalHandler} />}
+         {showModal && <Modal
+            spaceData={selectedSpaceData}
+            closeModal={closeModalHandler} />}
       </div>
    );
 };

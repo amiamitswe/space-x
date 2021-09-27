@@ -1,11 +1,14 @@
-const FormInput = ({ onKeyDown, placeholder }) => {
+const FormInput = ({ label, onKeyDown, placeholder }) => {
    return (
-      <input
-         type="text"
-         onKeyDown={onKeyDown}
-         className="form-control"
-         placeholder={placeholder}
-      />
+      <>
+         {label ? <label>{label}</label> : null}
+         <input
+            type="text"
+            onKeyDown={onKeyDown}
+            className="form-control mb-2"
+            placeholder={placeholder}
+         />
+      </>
    );
 };
 

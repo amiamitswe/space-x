@@ -6,7 +6,7 @@ const Cart = (props) => {
 
    return (
       <div className='col-12 col-sm-6 col-md-4 col-lg-3 mb-4'>
-         <div className='bg-light p-3 rounded-1 cursor-pointer' onClick={onClick}>
+         <div className='bg-light p-3 rounded-1 cursor-pointer' onClick={() => onClick(space.flight_number)}>
             <div className='w-100 text-center p-2' style={{ height: '166px' }}>
                <img src={space?.links.mission_patch_small} alt={space?.mission_name} height='150' width='150' />
             </div>
