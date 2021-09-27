@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatDate } from '../../lib/halper';
+import { formatDate, getDayData, getMonthData, getYearData } from '../../lib/halper';
 
 const Cart = (props) => {
    const { onClick, space } = props;
@@ -31,6 +31,9 @@ const Cart = (props) => {
                   {space?.launch_success ? 'True' : 'False'}
                </span>
             </p>
+            {/* <p>{getMonthData(space?.launch_date_utc)}</p>
+            <p>{getYearData(space?.launch_date_utc)}</p>
+            <p>{getDayData(space?.launch_date_utc)}</p> */}
          </div>
       </div>
    );

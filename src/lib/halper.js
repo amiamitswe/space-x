@@ -8,4 +8,21 @@ const formatDate = (detDate) => {
    return detDate = dd + '/' + mm + '/' + yyyy;
 };
 
-export { formatDate };
+const getMonthData = (detDate) => {
+   const date = new Date(detDate);
+   let mm = date.getMonth() + 1;
+   return detDate = mm;
+};
+
+const getYearData = (detDate) => {
+   const date = new Date(detDate);
+   let yyyy = date.getFullYear();
+   return detDate = yyyy;
+};
+const getDayData = (detDate) => {
+   const date = new Date(detDate);
+   let dd = date.getDate();
+   return detDate = dd;
+};
+
+export { formatDate, getMonthData, getYearData, getDayData };
