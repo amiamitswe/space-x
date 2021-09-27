@@ -15,8 +15,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "build": "react-scripts build && echo '/* /index.html 200' > ./build/_redirects",
+    "test": "jasmine-browser-runner runSpecs",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -33,5 +33,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "jasmine-browser-runner": "^0.8.0"
   }
 }
