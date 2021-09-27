@@ -2,7 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { shortByTime, shortByUpComing, sortByStatus } from '../../lib/data';
-import { getYearData } from '../../lib/halper';
+import {
+   getLastMonthOfThisYear,
+   getMonthOfGetDate,
+   getYearData,
+   getLastWeakOfThisYear,
+   getWeakOfGetDate
+} from '../../lib/helper';
 import { listSpace } from '../../redux/actions/spaceList';
 import { selectSpaceList, selectSpaceListLoading } from '../../redux/selectors/spaceList';
 import Cart from '../Cart/Cart';
@@ -19,6 +25,7 @@ const BodyContainer = () => {
 
    const [showModal, setShowModal] = useState(false);
    const [spaceList, setSpaceList] = useState(spaceListData);
+   const [error, setError] = useState(null);
 
    // modal open and close handler
    const showModalHandler = () => {
@@ -49,15 +56,17 @@ const BodyContainer = () => {
          const searchItem = [];
          if (searchValue.length > 0) {
             spaceListData.forEach(item => {
-               // check rocket name and search name is same
                if (item?.rocket?.rocket_name.toLowerCase() === searchValue.toLowerCase()) {
                   searchItem.push(item);
+                  setError(null);
                }
+               else setError(searchValue);
             });
             setSpaceList(searchItem);
          }
          else {
             setSpaceList(spaceListData);
+            setError(null);
          }
       }
    };
@@ -72,7 +81,9 @@ const BodyContainer = () => {
             // check mission success
             if (item?.launch_success === true) {
                searchItem.push(item);
+               setError(null);
             }
+            else setError("Success");
          });
          setSpaceList(searchItem);
          return;
@@ -83,7 +94,9 @@ const BodyContainer = () => {
             // check mission failed
             if (item?.launch_success === false) {
                searchItem.push(item);
+               setError(null);
             }
+            else setError("Failed");
          });
          setSpaceList(searchItem);
          return;
@@ -94,7 +107,6 @@ const BodyContainer = () => {
          setSpaceList(spaceListData);
          return;
       }
-
    };
 
    const filterByUpcomingHandler = (event) => {
@@ -106,7 +118,9 @@ const BodyContainer = () => {
             // check upcoming true
             if (item?.upcoming === false) {
                searchItem.push(item);
+               setError(null);
             }
+            else setError("Completed");
          });
          setSpaceList(searchItem);
          return;
@@ -116,7 +130,9 @@ const BodyContainer = () => {
             // check upcoming true
             if (item?.upcoming === true) {
                searchItem.push(item);
+               setError(null);
             }
+            else setError("Upcoming");
          });
          setSpaceList(searchItem);
          return;
@@ -136,25 +152,47 @@ const BodyContainer = () => {
       const searchItem = [];
       if (selectedTime === 'year') {
          spaceListData.forEach(item => {
-            // check last weak Year
+            // check last Year
             if (getYearData(item?.launch_date_utc) === getYearData(new Date()) - 1) {
                searchItem.push(item);
+               setError(null);
             }
+            else setError("Last Year");
          });
          setSpaceList(searchItem);
          return;
       };
 
-      // if (selectedTime === 'month') {
-      //    spaceListData.forEach(item => {
-      //       // check last weak Year
-      //       if (getYearData(item?.launch_date_utc) === getYearData(new Date()) - 1) {
-      //          searchItem.push(item);
-      //       }
-      //    });
-      //    setSpaceList(searchItem);
-      //    return;
-      // };
+      if (selectedTime === 'month') {
+         spaceListData.forEach(item => {
+            if (getMonthOfGetDate(item?.launch_date_utc) >= getLastMonthOfThisYear(new Date())) {
+               searchItem.push(item);
+               setError(null);
+            }
+            else setError("Last Month");
+
+         });
+         setSpaceList(searchItem);
+         return;
+      };
+
+      if (selectedTime === 'weak') {
+         spaceListData.forEach(item => {
+            if (getWeakOfGetDate(item?.launch_date_utc) >= getLastWeakOfThisYear(new Date())) {
+               searchItem.push(item);
+               setError(null);
+            }
+            else setError("Last Weak");
+
+         });
+         setSpaceList(searchItem);
+         return;
+      };
+
+      if (selectedTime === 'clear') {
+         setSpaceList(spaceListData);
+         return;
+      }
    };
 
    return (
@@ -196,7 +234,11 @@ const BodyContainer = () => {
 
 
             </div>
-            : <h1 className='text-center text-info mt-5'>No Rocket data found ...!</h1>}
+            :
+            <>{error ? <h1 className='text-center text-info mt-5'>
+               No Rocket data found with
+               <span className='text-danger mx-2'>"{error}"</span></h1> : null}</>
+         }
          {showModal && <Modal closeModal={closeModalHandler} />}
       </div>
    );
